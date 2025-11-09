@@ -1,0 +1,29 @@
+name: Multi-Platform Matrix Build
+
+on:
+  push:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        version: [14, 16, 18, 20]
+    
+    steps:
+      - name: matrix-0badb6a
+        run: echo "Building for version ${{ matrix.version }}"
+      
+      - name: Generate build artifact
+        run: |
+          mkdir -p output
+          echo "Build for version ${{ matrix.version }}" > output/build.txt
+          echo "Timestamp: $(date)" >> output/build.txt
+          echo "GitHub SHA: ${{ github.sha }}" >> output/build.txt
+      
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: build-0badb6a-v${{ matrix.version }}
+          path: output/
